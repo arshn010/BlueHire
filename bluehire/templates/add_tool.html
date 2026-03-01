@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Add New Tool</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Tool Name</label>
+            <input type="text" name="name" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Price Per Day (₹)</label>
+            <input type="number" name="price" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-success">Add Tool</button>
+    </form>
+</div>
+{% endblock %}

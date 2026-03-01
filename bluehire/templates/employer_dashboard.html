@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row g-3">
+    <div class="col-md-5">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <h2 class="h5 mb-2 d-flex align-items-center">
+                    <span class="material-icons text-primary me-2">business</span>
+                    Employer Dashboard
+                </h2>
+                <p class="mb-3">
+                    Welcome, <strong>{{ current_user.name }}</strong>
+                    {% if profile %}<br><span class="text-muted small">{{ profile.company_name }}</span>{% endif %}
+                </p>
+                <div class="d-grid gap-2">
+                    <a class="btn btn-primary d-flex justify-content-center align-items-center"
+                       href="{{ url_for('employer.create_job') }}">
+                        <span class="material-icons me-1">post_add</span> Post New Job
+                    </a>
+                    <a class="btn btn-outline-secondary d-flex justify-content-center align-items-center"
+                       href="{{ url_for('employer.profile') }}">
+                        <span class="material-icons me-1">apartment</span> Edit Company Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h3 class="h6 mb-3 d-flex align-items-center">
+                    <span class="material-icons text-primary me-2">work_outline</span>
+                    Your Jobs
+                </h3>
+                {% if jobs %}
+                    <div class="list-group list-group-flush">
+                        {% for job in jobs %}
+                            <a href="{{ url_for('employer.view_applications', job_id=job.id) }}"
+                               class="list-group-item list-group-item-action">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <div class="fw-semibold">{{ job.title }}</div>
+                                        <div class="small text-muted">
+                                            {{ job.category }} • {{ job.location }}
+                                        </div>
+                                        <div class="small text-muted">
+                                            {{ job.description[:80] }}{% if job.description|length > 80 %}...{% endif %}
+                                        </div>
+                                    </div>
+                                    <span class="material-icons text-secondary">chevron_right</span>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted small mb-0">
+                        No jobs yet. Post your first job to reach workers.
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

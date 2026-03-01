@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card dashboard-card">
+    <h2>Admin Dashboard</h2>
+    <p>System overview.</p>
+</section>
+
+<section class="card">
+    <h3>Users</h3>
+    <p>Total: {{ users|length }}</p>
+</section>
+
+<section class="card">
+    <h3>Jobs</h3>
+    <p>Total: {{ jobs|length }}</p>
+</section>
+
+<section class="card">
+    <h3>Applications</h3>
+    <p>Total: {{ applications|length }}</p>
+</section>
+{% endblock %}
+
+

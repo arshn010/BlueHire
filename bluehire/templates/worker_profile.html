@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+    <h2>Work Profile</h2>
+    <form method="post">
+        <label>Skills
+            <input type="text" name="skills" value="{{ profile.skills if profile else '' }}" placeholder="e.g. Electrician, Plumber">
+        </label>
+        <label>Experience (years)
+            <input type="number" name="experience_years" min="0" value="{{ profile.experience_years if profile else 0 }}">
+        </label>
+        <label>Preferred Location
+            <input type="text" name="preferred_location" value="{{ profile.preferred_location if profile else '' }}">
+        </label>
+        <button type="submit" class="primary-btn">Save</button>
+    </form>
+</section>
+{% endblock %}
+
+

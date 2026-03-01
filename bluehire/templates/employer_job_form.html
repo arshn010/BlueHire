@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+    <h2>Post a Job</h2>
+    <form method="post">
+        <label>Job Title
+            <input type="text" name="title" required>
+        </label>
+        <label>Description
+            <textarea name="description" rows="4" required></textarea>
+        </label>
+        <label>Category
+            <input type="text" name="category" placeholder="e.g. Electrician, Driver" required>
+        </label>
+        <label>Location
+            <input type="text" name="location" required>
+        </label>
+        <label>Skills Required
+            <input type="text" name="skills_required" placeholder="e.g. Driving, Heavy Vehicle, License">
+        </label>
+        <div class="inline-inputs">
+            <label>Salary Min
+                <input type="number" name="salary_min" min="0">
+            </label>
+            <label>Salary Max
+                <input type="number" name="salary_max" min="0">
+            </label>
+        </div>
+        <button type="submit" class="primary-btn">Post Job</button>
+    </form>
+</section>
+{% endblock %}
+
+

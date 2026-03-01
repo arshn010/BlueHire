@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+    <h2>Company Profile</h2>
+    <form method="post">
+        <label>Company Name
+            <input type="text" name="company_name" value="{{ profile.company_name if profile else '' }}" required>
+        </label>
+        <label>Description
+            <textarea name="company_description" rows="3">{{ profile.company_description if profile else '' }}</textarea>
+        </label>
+        <label>Location
+            <input type="text" name="location" value="{{ profile.location if profile else '' }}">
+        </label>
+        <button type="submit" class="primary-btn">Save</button>
+    </form>
+</section>
+{% endblock %}
+
+

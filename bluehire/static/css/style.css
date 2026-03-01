@@ -1,0 +1,153 @@
+.hero {
+    text-align: left;
+    margin-bottom: 1rem;
+}
+
+.hero h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.25rem;
+}
+
+.hero p {
+    color: #4b5563;
+}
+
+.dashboard-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid #d1d5db;
+    margin-top: 0.25rem;
+    font-size: 1rem;
+}
+
+.primary-btn, .secondary-btn, .voice-btn, .pill-btn {
+    border-radius: 999px;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.98rem;
+    cursor: pointer;
+}
+
+.primary-btn {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.secondary-btn {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.primary-btn:active,
+.secondary-btn:active,
+.pill-btn:active,
+.voice-btn:active {
+    transform: scale(0.97);
+}
+
+.search-card {
+    margin-bottom: 1rem;
+}
+
+.search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.job-list {
+    margin-top: 0.5rem;
+}
+
+.job-card {
+    background: #ffffff;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid #e5e7eb;
+}
+
+.job-meta {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.job-skills {
+    font-size: 0.85rem;
+    color: #374151;
+}
+
+.flash-container {
+    margin-bottom: 0.75rem;
+}
+
+.flash {
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.25rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.flash-success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.flash-danger {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.flash-info {
+    background: #e0f2fe;
+    color: #075985;
+}
+
+.flash-warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.inline-inputs {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.inline-inputs label {
+    flex: 1;
+}
+
+.simple-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.simple-list li {
+    padding: 0.25rem 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.link-btn {
+    font-size: 0.9rem;
+}
+

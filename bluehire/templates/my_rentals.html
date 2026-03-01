@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>My Rentals</h2>
+
+{% if rentals %}
+    {% for rental in rentals %}
+        <div class="card p-3 mb-3">
+            <h4>{{ rental.tool.name }}</h4>
+            <p><strong>Rented Until:</strong> {{ rental.end_date.strftime('%d %b %Y') }}</p>
+            <p><strong>Total Price:</strong> ₹ {{ rental.total_price }}</p>
+            <p><strong>Status:</strong> {{ rental.status }}</p>
+
+            {% if rental.status != "returned" %}
+                <a href="{{ url_for('main.return_tool', rental_id=rental.id) }}" 
+                   class="btn btn-danger">
+                   Return Tool
+                </a>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No rentals yet.</p>
+{% endif %}
+
+{% endblock %}

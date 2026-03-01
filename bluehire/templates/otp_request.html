@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card auth-card">
+    <h2>Login with Mobile OTP</h2>
+    <form method="post">
+        <label>Mobile Number
+            <input type="tel" name="phone" required>
+        </label>
+        <button type="submit" class="primary-btn">Send OTP</button>
+    </form>
+</section>
+{% endblock %}
+
+

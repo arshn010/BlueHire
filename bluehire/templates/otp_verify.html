@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card auth-card">
+    <h2>Enter OTP</h2>
+    <p>We sent a code to: <strong>{{ phone }}</strong></p>
+    <form method="post">
+        <label>OTP Code
+            <input type="text" name="code" maxlength="6" required>
+        </label>
+        <button type="submit" class="primary-btn">Verify</button>
+    </form>
+</section>
+{% endblock %}
+
+
