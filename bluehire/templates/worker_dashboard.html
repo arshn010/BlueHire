@@ -1,60 +1,166 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row g-3">
-    <div class="col-md-5">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-body">
-                <h2 class="h5 mb-2 d-flex align-items-center">
-                    <span class="material-icons text-primary me-2">person</span>
-                    Worker Dashboard
-                </h2>
-                <p class="mb-3">Welcome, <strong>{{ current_user.name }}</strong></p>
-                <div class="d-grid gap-2">
-                    <a class="btn btn-primary d-flex justify-content-center align-items-center"
-                       href="{{ url_for('worker.browse_jobs') }}">
-                        <span class="material-icons me-1">search</span> Find Jobs
-                    </a>
-                    <a class="btn btn-outline-secondary d-flex justify-content-center align-items-center"
-                       href="{{ url_for('worker.profile') }}">
-                        <span class="material-icons me-1">edit</span> Edit Work Profile
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="col-md-7">
-        <div class="card shadow-sm border-0">
-            <div class="card-body">
-                <h3 class="h6 mb-3 d-flex align-items-center">
-                    <span class="material-icons text-primary me-2">assignment</span>
-                    Your Applications
-                </h3>
-                {% if applications %}
-                    <ul class="list-group list-group-flush">
-                        {% for app in applications %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    <div class="small text-muted">
-                                        Job ID: {{ app.job_id }}
-                                    </div>
-                                    <div class="small">
-                                        Applied: {{ app.applied_at.strftime('%Y-%m-%d') }}
-                                    </div>
-                                </div>
-                                <span class="badge bg-info text-dark text-uppercase">
-                                    {{ app.status }}
-                                </span>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p class="text-muted small mb-0">No applications yet. Start applying to jobs.</p>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+<div class="container mt-5">
+
+<!-- HEADER -->
+<div class="dashboard-header mb-4">
+<h2 class="text-white fw-bold">Worker Dashboard</h2>
+<p class="text-light">Welcome back, {{ current_user.name }}</p>
 </div>
+
+
+<!-- STATISTICS -->
+<div class="row mb-4">
+
+<div class="col-md-3">
+<div class="card dashboard-card text-center">
+<div class="card-body">
+<h6 class="text-muted">Jobs Applied</h6>
+<h3>{{ applications|length if applications else 0 }}</h3>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card dashboard-card text-center">
+<div class="card-body">
+<h6 class="text-muted">Tools Rented</h6>
+<h3>{{ rentals|length if rentals else 0 }}</h3>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card dashboard-card text-center">
+<div class="card-body">
+<h6 class="text-muted">Active Rentals</h6>
+<h3>{{ rentals|length if rentals else 0 }}</h3>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card dashboard-card text-center">
+<div class="card-body">
+<h6 class="text-muted">Completed Jobs</h6>
+<h3>0</h3>
+</div>
+</div>
+</div>
+
+</div>
+
+
+
+<div class="row g-4">
+
+<!-- QUICK ACTIONS -->
+<div class="col-md-4">
+
+<div class="card dashboard-card h-100">
+
+<div class="card-body">
+
+<h5 class="fw-bold mb-3">Quick Actions</h5>
+
+<div class="d-grid gap-3">
+
+<a class="btn btn-primary dashboard-btn"
+href="{{ url_for('main.index') }}">
+🔎 Find Jobs
+</a>
+
+<a class="btn btn-outline-secondary dashboard-btn"
+href="{{ url_for('worker.profile') }}">
+✏ Edit Work Profile
+</a>
+
+<a class="btn btn-warning dashboard-btn"
+href="{{ url_for('main.tools') }}">
+🛠 Rent Tools
+</a>
+
+<a class="btn btn-dark dashboard-btn"
+href="{{ url_for('main.my_rentals') }}">
+📦 My Rentals
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- APPLICATIONS -->
+<div class="col-md-8">
+
+<div class="card dashboard-card">
+
+<div class="card-body">
+
+<h5 class="fw-bold mb-3">Recent Applications</h5>
+
+{% if applications %}
+
+<div class="list-group list-group-flush">
+
+{% for app in applications %}
+
+<div class="list-group-item dashboard-list">
+
+<div class="d-flex justify-content-between">
+
+<div>
+
+<div class="fw-semibold">{{ app.job.title }}</div>
+
+<div class="small text-muted">
+{{ app.job.location }}
+</div>
+
+</div>
+
+<span class="badge bg-secondary">
+{{ app.status }}
+</span>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="text-center py-4">
+
+<h6 class="text-muted">
+You haven't applied to any jobs yet
+</h6>
+
+<a href="{{ url_for('main.index') }}" class="btn btn-primary mt-2">
+Browse Jobs
+</a>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
 {% endblock %}
-
-

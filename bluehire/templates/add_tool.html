@@ -1,26 +1,57 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>Add New Tool</h2>
 
-    <form method="POST">
-        <div class="mb-3">
-            <label class="form-label">Tool Name</label>
-            <input type="text" name="name" class="form-control" required>
-        </div>
+<div class="container mt-5">
 
-        <div class="mb-3">
-            <label class="form-label">Description</label>
-            <textarea name="description" class="form-control" required></textarea>
-        </div>
+<div class="row justify-content-center">
 
-        <div class="mb-3">
-            <label class="form-label">Price Per Day (₹)</label>
-            <input type="number" name="price" class="form-control" required>
-        </div>
+<div class="col-lg-6">
 
-        <button type="submit" class="btn btn-success">Add Tool</button>
-    </form>
+<div class="card shadow-lg border-0 rounded-4">
+
+<div class="card-body p-4">
+
+<h3 class="mb-4 text-center">Add New Tool</h3>
+
+<form method="POST" enctype="multipart/form-data">
+
+<div class="mb-3">
+<label class="form-label">Tool Name</label>
+<input type="text" name="name" class="form-control" required>
 </div>
+
+<div class="mb-3">
+<label class="form-label">Description</label>
+<textarea name="description" class="form-control" rows="3"></textarea>
+</div>
+
+<div class="mb-3">
+<label class="form-label">Price Per Day (₹)</label>
+<input type="number" name="price" class="form-control" required>
+</div>
+
+<div class="mb-3">
+<label class="form-label">Tool Image</label>
+<input type="file" name="image" class="form-control">
+</div>
+
+<div class="d-grid">
+<button class="btn btn-success">
+Add Tool
+</button>
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
 {% endblock %}

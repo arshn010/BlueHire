@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<div class="row justify-content-center">
+
+<!-- PAYMENT SUMMARY -->
+<div class="col-md-6">
+
+<div class="card shadow-lg border-0">
+
+<div class="card-body p-4">
+
+<h4 class="mb-4 text-center">
+Confirm Tool Rental
+</h4>
+
+<hr>
+
+<!-- TOOL INFO -->
+<div class="d-flex align-items-center mb-3">
+
+<img src="{{ url_for('static', filename='tool_images/' + tool.image) if tool.image else url_for('static', filename='tool_images/default.png') }}"
+style="width:80px;height:80px;object-fit:contain"
+class="me-3">
+
+<div>
+<h5 class="mb-1">{{ tool.name }}</h5>
+<p class="text-muted small mb-0">
+Rental equipment
+</p>
+</div>
+
+</div>
+
+<hr>
+
+<!-- PAYMENT DETAILS -->
+<div class="mb-2 d-flex justify-content-between">
+<span>Price per day</span>
+<span>₹ {{ tool.price_per_day }}</span>
+</div>
+
+<div class="mb-2 d-flex justify-content-between">
+<span>Days</span>
+<span>{{ days }}</span>
+</div>
+
+<hr>
+
+<div class="d-flex justify-content-between fw-bold fs-5">
+<span>Total</span>
+<span class="text-success">₹ {{ total_price }}</span>
+</div>
+
+<hr>
+
+<!-- PAYMENT FORM -->
+<form method="POST"
+action="{{ url_for('main.confirm_payment', tool_id=tool.id) }}">
+
+<input type="hidden" name="days" value="{{ days }}">
+
+<hr>
+
+<h5 class="mb-3">Select Payment Method</h5>
+
+<div class="mb-3">
+
+<div class="form-check">
+<input class="form-check-input" type="radio" name="payment_method" value="upi" checked>
+<label class="form-check-label">
+📱 UPI Payment
+</label>
+</div>
+
+<div class="form-check">
+<input class="form-check-input" type="radio" name="payment_method" value="card">
+<label class="form-check-label">
+💳 Credit / Debit Card
+</label>
+</div>
+
+<div class="form-check">
+<input class="form-check-input" type="radio" name="payment_method" value="cod">
+<label class="form-check-label">
+💵 Cash on Delivery
+</label>
+</div>
+
+</div>
+
+
+<!-- CARD DETAILS -->
+<div class="mb-3">
+
+<label class="form-label">Card Number</label>
+<input type="text" class="form-control" placeholder="1234 5678 9012 3456">
+
+<label class="form-label mt-2">Expiry</label>
+<input type="text" class="form-control" placeholder="MM/YY">
+
+<label class="form-label mt-2">CVV</label>
+<input type="password" class="form-control" placeholder="123">
+
+</div>
+
+
+<button class="btn btn-success w-100 mt-3">
+Pay ₹{{ total_price }}
+</button>
+
+</form>
+{% endblock %}

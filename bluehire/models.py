@@ -6,22 +6,32 @@ from bluehire import db, login_manager
 from datetime import datetime
 
 class User(UserMixin, db.Model):
+
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     phone = db.Column(db.String(20), unique=True, nullable=True)
     password_hash = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.String(20), nullable=False, default="worker")  # worker, employer, admin
+    role = db.Column(db.String(20), nullable=False, default="worker")
     name = db.Column(db.String(120), nullable=False)
     preferred_language = db.Column(db.String(10), default="en")
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    employer_profile = db.relationship("EmployerProfile", backref="user", uselist=False)
-    worker_profile = db.relationship("WorkerProfile", backref="user", uselist=False)
+    employer_profile = db.relationship(
+        "EmployerProfile",
+        back_populates="user",
+        uselist=False
+    )
 
-    def set_password(self, password: str) -> None:
+    worker_profile = db.relationship(
+        "WorkerProfile",
+        back_populates="user",
+        uselist=False
+    )
+
+    def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
-    def check_password(self, password: str) -> bool:
+    def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
 
@@ -33,6 +43,10 @@ def load_user(user_id):
 class EmployerProfile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    user = db.relationship(
+    "User",
+    back_populates="employer_profile"
+)
     company_name = db.Column(db.String(200), nullable=False)
     company_description = db.Column(db.Text)
     location = db.Column(db.String(200))
@@ -42,7 +56,13 @@ class EmployerProfile(db.Model):
 
 class WorkerProfile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    user = db.relationship(
+    "User",
+    back_populates="worker_profile"
+)
+
     skills = db.Column(db.String(255))
     experience_years = db.Column(db.Integer, default=0)
     preferred_location = db.Column(db.String(200))
@@ -65,10 +85,14 @@ class Job(db.Model):
 
 class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    worker_id = db.Column(db.Integer, db.ForeignKey("worker_profile.id"), nullable=False)
-    job_id = db.Column(db.Integer, db.ForeignKey("job.id"), nullable=False)
-    status = db.Column(db.String(50), default="applied")  # applied, shortlisted, rejected, hired
+
+    job_id = db.Column(db.Integer, db.ForeignKey('job.id'))
+    worker_id = db.Column(db.Integer, db.ForeignKey('worker_profile.id'))
+
+    status = db.Column(db.String(50))
     applied_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    worker_profile = db.relationship('WorkerProfile', backref='applications')
 
 
 class OTP(db.Model):
@@ -79,10 +103,16 @@ class OTP(db.Model):
     is_used = db.Column(db.Boolean, default=False)
 
 class Tool(db.Model):
+
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    price_per_day = db.Column(db.Float, nullable=False)
+
+    name = db.Column(db.String(200))
+    description = db.Column(db.Text)
+
+    price_per_day = db.Column(db.Integer)
+
+    image = db.Column(db.String(200))    
+
     is_available = db.Column(db.Boolean, default=True)
 
 class ToolRental(db.Model):

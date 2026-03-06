@@ -2,33 +2,101 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2>Available Tools for Rent</h2>
-    <a href="{{ url_for('main.add_tool') }}" class="btn btn-primary mb-3">Add Tool</a>
+
+    <div class="d-inline-block px-3 py-2 mb-3 bg-dark bg-opacity-75 rounded">
+    <h2 class="text-white mb-0">Available Tools for Rent</h2>
+</div>
+
+    <a href="{{ url_for('main.add_tool') }}" class="btn btn-primary mb-4">
+        + Add Tool
+    </a>
 
     {% if tools %}
-        <div class="row">
-            {% for tool in tools %}
-                <div class="col-md-4 mb-3">
-                    <div class="card p-3">
-                        <h4>{{ tool.name }}</h4>
-                        <p>{{ tool.description }}</p>
-                        <p><strong>₹ {{ tool.price_per_day }} / day</strong></p>
+    <div class="row">
 
-                        {% if tool.is_available %}
-                            <form method="POST" action="{{ url_for('main.rent_tool', tool_id=tool.id) }}">
-                                <label>Days:</label>
-                                <input type="number" name="days" min="1" value="1" required>
-                                <button type="submit">Rent Now</button>
-                            </form>
+        {% for tool in tools %}
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow-sm h-100">
+
+                <!-- TOOL IMAGE -->
+                {% if tool.image %}
+                <img src="{{ url_for('static', filename='tool_images/' + tool.image) }}"
+                     class="card-img-top"
+                     style="height:200px; object-fit:contain; background:white;">
+                {% else %}
+                <img src="{{ url_for('static', filename='default_tool.png') }}"
+                     class="card-img-top"
+                     style="height:200px; object-fit:contain; background:white;">
+                {% endif %}
+
+                <div class="card-body d-flex flex-column">
+
+                    <h5 class="card-title">{{ tool.name }}</h5>
+
+                    <p class="card-text">
+                        {{ tool.description }}
+                    </p>
+
+                    <p class="fw-bold text-success">
+                        ₹ {{ tool.price_per_day }} / day
+                    </p>
+
+                    {% if tool.is_available %}
+
+                        {% if current_user.role == "worker" %}
+
+                            <form method="POST"
+                            action="{{ url_for('main.payment_page', tool_id=tool.id) }}">
+
+                            <div class="mb-2">
+                                <label class="form-label">Days</label>
+                                <input type="number"
+                                       name="days"
+                                       min="1"
+                                       value="1"
+                                       class="form-control"
+                                       required>
+                            </div>
+
+                            <button class="btn btn-success w-100">
+                                Rent Now
+                            </button>
+
+                        </form>
+
                         {% else %}
-                            <button disabled>Not Available</button>
+
+                        <button class="btn btn-outline-secondary w-100 mt-auto" disabled>
+                            Employers cannot rent tools
+                        </button>
+
                         {% endif %}
-                    </div>
+
+                    {% else %}
+
+                    <button class="btn btn-secondary w-100 mt-auto" disabled>
+                        Not Available
+                    </button>
+
+                    {% endif %}
+
                 </div>
-            {% endfor %}
+
+            </div>
+
         </div>
+        {% endfor %}
+
+    </div>
+
     {% else %}
-        <p>No tools available yet.</p>
+
+    <div class="alert alert-info">
+        No tools available yet.
+    </div>
+
     {% endif %}
+
 </div>
 {% endblock %}

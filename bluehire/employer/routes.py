@@ -1,10 +1,15 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
-
+import os
+from flask import current_app
 from bluehire import db
-from bluehire.models import EmployerProfile, Job, Application
+from bluehire.models import EmployerProfile, Job, Application, WorkerProfile
 from . import employer_bp
-
+from bluehire.models import Tool, EmployerProfile
+from flask import redirect, request
+from werkzeug.utils import secure_filename
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 def employer_required(func):
     from functools import wraps
@@ -97,14 +102,113 @@ def create_job():
 
 @employer_bp.route("/jobs/<int:job_id>/applications")
 @login_required
-@employer_required
 def view_applications(job_id):
+
     job = Job.query.get_or_404(job_id)
-    if job.employer.user_id != current_user.id:
-        flash("Access denied.", "danger")
-        return redirect(url_for("employer.dashboard"))
 
     applications = Application.query.filter_by(job_id=job.id).all()
-    return render_template("employer_applications.html", job=job, applications=applications)
+
+    recommended_workers = recommend_workers(job)
+
+    return render_template(
+        "employer_applications.html",
+        job=job,
+        applications=applications,
+        recommended_workers=recommended_workers
+    )
 
 
+@employer_bp.route("/tools/add", methods=["GET","POST"])
+@login_required
+def add_tool():
+
+    if request.method == "POST":
+
+        name = request.form["name"]
+        description = request.form["description"]
+        price = request.form["price"]
+
+        image = request.files.get("image")
+
+        filename = None
+
+        if image:
+            filename = secure_filename(image.filename)
+
+            image_path = os.path.join(
+                current_app.root_path,
+                "static",
+                "tool_images",
+                filename
+            )
+
+            image.save(image_path)
+
+        tool = Tool(
+            name=name,
+            description=description,
+            price_per_day=int(price),
+            image=filename
+        )
+
+        db.session.add(tool)
+        db.session.commit()
+
+        return redirect(url_for("main.tools"))
+
+    return render_template("add_tool.html")
+
+@employer_bp.route("/applications/<int:app_id>/accept")
+@login_required
+def accept_worker(app_id):
+
+    application = Application.query.get_or_404(app_id)
+
+    application.status = "accepted"
+
+    db.session.commit()
+
+    flash("Worker accepted successfully.", "success")
+
+    return redirect(request.referrer)
+
+@employer_bp.route("/application/<int:app_id>/reject")
+@login_required
+def reject_worker(app_id):
+
+    application = Application.query.get_or_404(app_id)
+
+    application.status = "rejected"
+
+    db.session.commit()
+
+    flash("Worker rejected.", "danger")
+
+    return redirect(request.referrer)
+
+def recommend_workers(job):
+
+    from bluehire.models import WorkerProfile
+
+    workers = WorkerProfile.query.all()
+
+    if not workers:
+        return []
+
+    worker_skills = [w.skills or "" for w in workers]
+
+    texts = [job.skills_required] + worker_skills
+
+    vectorizer = TfidfVectorizer()
+
+    vectors = vectorizer.fit_transform(texts)
+
+    similarity = cosine_similarity(vectors[0:1], vectors[1:]).flatten()
+
+    ranked_workers = sorted(
+        zip(workers, similarity),
+        key=lambda x: x[1],
+        reverse=True
+    )
+
+    return ranked_workers[:5]   # top 5 workers

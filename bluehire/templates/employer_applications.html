@@ -1,21 +1,177 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="card">
-    <h2>Applications for {{ job.title }}</h2>
-    {% if applications %}
-        <ul class="simple-list">
-            {% for app in applications %}
-                <li>
-                    Worker ID: {{ app.worker_id }} –
-                    Status: {{ app.status }} –
-                    Applied at: {{ app.applied_at.strftime('%Y-%m-%d') }}
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No applications yet.</p>
-    {% endif %}
-</section>
+
+<div class="card mb-4 shadow-sm">
+
+<div class="card-header bg-primary text-white">
+AI Recommended Workers
+</div>
+
+<div class="card-body">
+
+{% if recommended_workers %}
+
+<ul class="list-group">
+
+{% for worker, score in recommended_workers %}
+
+<li class="list-group-item d-flex justify-content-between">
+
+<div>
+
+<strong>{{ worker.user.name }}</strong><br>
+
+<span class="text-muted">
+{{ worker.skills }}
+</span>
+
+</div>
+
+<span class="badge bg-success">
+
+{{ (score*100)|round(0) }}% match
+
+</span>
+
+</li>
+
+{% endfor %}
+
+</ul>
+
+{% else %}
+
+<p class="text-muted">No recommendations yet.</p>
+
+{% endif %}
+
+</div>
+</div>
+
+<div class="container mt-5">
+
+    <div class="card shadow">
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0">Applications for {{ job.title }}</h4>
+        </div>
+
+        <div class="card-body">
+
+            {% if applications %}
+
+            <div class="table-responsive">
+
+                <table class="table table-hover table-bordered align-middle">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Skills</th>
+                            <th>Experience</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Applied</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    
+                        <tbody>
+{% for app in applications %}
+<tr>
+
+<td>
+<strong>{{ app.worker_profile.user.name }}</strong>
+</td>
+
+<td>
+{{ app.worker_profile.user.email }}
+</td>
+
+<td>
+{{ app.worker_profile.phone or "Not Provided" }}
+</td>
+
+<td>
+<span class="badge bg-secondary">
+{{ app.worker_profile.skills or "Not specified" }}
+</span>
+</td>
+
+<td>
+{{ app.worker_profile.experience_years or 0 }} yrs
+</td>
+
+<td>
+{{ app.worker_profile.preferred_location or "Unknown" }}
+</td>
+
+<td>
+{% if app.status == "accepted" %}
+<span class="badge bg-success">Accepted</span>
+{% elif app.status == "rejected" %}
+<span class="badge bg-danger">Rejected</span>
+{% else %}
+<span class="badge bg-warning text-dark">Pending</span>
+{% endif %}
+</td>
+
+<td>
+{{ app.applied_at.strftime("%d %b %Y") if app.applied_at else "-" }}
+</td>
+
+<td>
+
+{% if app.status == "accepted" %}
+
+<a href="mailto:{{ app.worker_profile.user.email }}"
+class="btn btn-sm btn-primary">
+Email
+</a>
+
+<a href="https://wa.me/{{ app.worker_profile.phone }}"
+target="_blank"
+class="btn btn-sm btn-success">
+WhatsApp
+</a>
+
+{% else %}
+
+<a href="{{ url_for('employer.accept_worker', app_id=app.id) }}"
+class="btn btn-sm btn-success">
+Accept
+</a>
+
+<a href="{{ url_for('employer.reject_worker', app_id=app.id) }}"
+class="btn btn-sm btn-outline-danger">
+Reject
+</a>
+
+{% endif %}
+
+</td>
+
+</tr>
+{% endfor %}
+</tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+                <div class="alert alert-info">
+                    No workers have applied for this job yet.
+                </div>
+
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+
 {% endblock %}
-
-

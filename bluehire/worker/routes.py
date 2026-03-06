@@ -1,34 +1,59 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
+from functools import wraps
 
 from bluehire import db
-from bluehire.models import WorkerProfile, Job, Application
+from bluehire.models import WorkerProfile, Job, Application, Tool
 from . import worker_bp
 
 
+# -------- WORKER ACCESS DECORATOR --------
 def worker_required(func):
-    from functools import wraps
-
     @wraps(func)
     def wrapper(*args, **kwargs):
         if not current_user.is_authenticated or current_user.role != "worker":
             flash("Worker access only.", "danger")
             return redirect(url_for("auth.login"))
         return func(*args, **kwargs)
-
     return wrapper
 
 
+# -------- TOOLS PAGE --------
+@worker_bp.route("/tools")
+@login_required
+@worker_required
+def tools():
+
+    tools = Tool.query.filter_by(is_available=True).all()
+
+    return render_template(
+        "tools.html",
+        tools=tools
+    )
+
+
+# -------- DASHBOARD --------
 @worker_bp.route("/dashboard")
 @login_required
 @worker_required
 def dashboard():
     profile = WorkerProfile.query.filter_by(user_id=current_user.id).first()
     applications = []
-    if profile:
-        applications = Application.query.filter_by(worker_id=profile.id).all()
-    return render_template("worker_dashboard.html", profile=profile, applications=applications)
 
+    if profile:
+        applications = (
+            Application.query
+            .filter_by(worker_id=profile.id)
+            .join(Job)
+            .order_by(Application.applied_at.desc())
+            .all()
+        )
+
+    return render_template(
+        "worker_dashboard.html",
+        profile=profile,
+        applications=applications
+    )
 
 @worker_bp.route("/profile", methods=["GET", "POST"])
 @login_required
